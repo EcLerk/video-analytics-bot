@@ -1,0 +1,18 @@
+[project]
+name = "video-analytics-bot"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Lera Kachanovskaya",email = "lerakachanovskaya@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlalchemy (>=2.0.46,<3.0.0)",
+    "alembic (>=1.18.4,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
