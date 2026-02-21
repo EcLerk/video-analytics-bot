@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from app.config import settings
+from app.config.settings import settings
 
 engine = create_async_engine(
-    settings.database_url,
+    settings.database_settings.url,
     echo=False,
 )
