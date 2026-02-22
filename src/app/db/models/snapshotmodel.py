@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.models.base import Base
 
 
-class Snapshot(Base):
+class SnapshotModel(Base):
     __tablename__ = "snapshots"
 
     video_id: Mapped[uuid.UUID] = mapped_column(
@@ -23,6 +23,6 @@ class Snapshot(Base):
     delta_comments_count: Mapped[int] = mapped_column(Integer, nullable=False,)
     delta_reports_count: Mapped[int] = mapped_column(Integer, nullable=False,)
 
-    video: Mapped["Video"] = relationship(
+    video: Mapped["VideoModel"] = relationship(
         back_populates="snapshots",
     )

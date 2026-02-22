@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.models.base import Base
 
 
-class Video(Base):
+class VideoModel(Base):
     __tablename__ = 'videos'
 
     creator_id: Mapped[str] = mapped_column(String, nullable=False,)
@@ -16,7 +16,7 @@ class Video(Base):
     comments_count: Mapped[int] = mapped_column(Integer, nullable=False,)
     reports_count: Mapped[int] = mapped_column(Integer, nullable=False,)
 
-    snapshots: Mapped[list["VideoSnapshot"]] = relationship(
+    snapshots: Mapped[list["SnapshotModel"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",
         lazy="selectin",
