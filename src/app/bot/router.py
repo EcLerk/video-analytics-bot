@@ -23,26 +23,26 @@ async def handle_start(message: Message) -> None:
 
 @router.message()
 async def handle_message(message: Message) -> None:
-    processing_msg = await message.answer("⏳ Обрабатываю запрос...")
+    # processing_msg = await message.answer("⏳ Обрабатываю запрос...")
 
     try:
         sql = await text_to_sql(message.text)
         logger.info("Generated SQL: %s", sql)
         result = await execute_query(sql)
-        await processing_msg.delete()
+        # await processing_msg.delete()
         await message.answer(result)
 
     except UnsafeSQLError:
         logger.warning("Unsafe SQL generated for message: %s", message.text)
-        await processing_msg.edit_text("❌ Не удалось безопасно обработать запрос, попробуй переформулировать")
+        await message.edit_text("❌ Не удалось безопасно обработать запрос, попробуй переформулировать")
 
     except LLMError:
         logger.error("LLM failed to process message: %s", message.text)
-        await processing_msg.edit_text("❌ Сервис временно недоступен, попробуй позже")
+        await message.edit_text("❌ Сервис временно недоступен, попробуй позже")
 
     except DatabaseQueryError:
         logger.error("DB query failed for message: %s", message.text)
-        await processing_msg.edit_text("❌ Ошибка при выполнении запроса к базе данных")
+        await message.edit_text("❌ Ошибка при выполнении запроса к базе данных")
 
     except NotFoundError:
-        await processing_msg.edit_text("🔍 По вашему запросу ничего не найдено")
+        await message.edit_text("🔍 По вашему запросу ничего не найдено")
