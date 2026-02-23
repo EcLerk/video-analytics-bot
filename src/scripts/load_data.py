@@ -1,5 +1,6 @@
+import asyncio
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 
 from app.db.models import VideoModel, SnapshotModel
 from app.db.session import Session
@@ -29,3 +30,7 @@ async def load_data() -> None:
                 await session.merge(video)
             for snapshot in snapshots:
                 await session.merge(snapshot)
+
+
+if __name__ == "__main__":
+    asyncio.run(load_data())

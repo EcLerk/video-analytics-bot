@@ -1,5 +1,6 @@
 from openai import AsyncOpenAI
 from app.config.settings import settings
+from app.exceptions.exceptions import LLMError
 
 client = AsyncOpenAI(
     api_key=settings.openai_settings.api_key,
@@ -52,7 +53,6 @@ async def text_to_sql(user_message: str) -> str:
             ],
             temperature=0,
         )
+        return response.choices[0].message.content.strip()
     except Exception as e:
-        return f"Ошибка выполнения запроса: {e}"
-
-    return response.choices[0].message.content.strip()
+        raise LLMError("Failed to generate SQL") from e
