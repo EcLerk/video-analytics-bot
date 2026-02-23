@@ -54,7 +54,7 @@ DATABASE__NAME=db-name
 # Telegram
 TG__API_KEY=your-telegram-api-key
 
-# LLM (Gemini)
+# LLM (Groq)
 OPENAI__API_KEY=your-gemini-api-key
 ```
 
@@ -65,12 +65,13 @@ OPENAI__API_KEY=your-gemini-api-key
 3. Указать название и username бота (username должен заканчиваться на `bot`)
 4. Скопировать выданный токен и вставить в `TG__API_KEY`
 
-### Как получить API-ключ Gemini
+### Как получить API-ключ Groq
 
-1. Зайти на [aistudio.google.com](https://aistudio.google.com)
+1. Зайти на [console.groq.com](https://console.groq.com)
 2. Перейти в `API keys` → `Create API key`
 3. Скопировать ключ и вставить в `OPENAI__API_KEY`
 
+Используемая модель: `llama-3.3-70b-versatile`
 ---
 
 ## Архитектура проекта
@@ -89,13 +90,13 @@ src/
   main.py
 ```
 
-**Стек:** Python 3.12, aiogram 3, SQLAlchemy 2 (async), PostgreSQL, Gemini API (совместим с OpenAI SDK), Docker.
+**Стек:** Python 3.12, aiogram 3, SQLAlchemy 2 (async), PostgreSQL, Groq API (совместим с OpenAI SDK), Docker.
 
 ---
 
 ## Подход к преобразованию текста в SQL
 
-Пользователь пишет вопрос на русском языке → бот отправляет его в Gemini вместе с системным промптом, описывающим схему БД → модель возвращает SQL-запрос → бот выполняет запрос и отвращает результат.
+Пользователь пишет вопрос на русском языке → бот отправляет его в Groq вместе с системным промптом, описывающим схему БД → модель возвращает SQL-запрос → бот выполняет запрос и отвращает результат.
 
 ### Схема данных в промпте
 
@@ -126,6 +127,7 @@ src/
 - возвращать только SQL без пояснений и markdown
 - использовать только `SELECT`
 - возвращать только одно число
+- Все временные условия указывать в UTC (+00)
 
 `temperature=0` гарантирует детерминированные ответы — для одного и того же вопроса модель всегда вернёт одинаковый SQL.
 
