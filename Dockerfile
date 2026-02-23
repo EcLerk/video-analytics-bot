@@ -16,6 +16,10 @@ COPY pyproject.toml poetry.lock* ./
 RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY ./src /app/src
+COPY entrypoints/app-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 WORKDIR /app/src
 
+ENTRYPOINT ["/app-entrypoint.sh"]
 CMD ["python", "main.py"]
