@@ -30,7 +30,7 @@ async def handle_message(message: Message) -> None:
         logger.info("Generated SQL: %s", sql)
         result = await execute_query(sql)
         await processing_msg.delete()
-        await message.answer(f"📊 Результат: {result}")
+        await message.answer(result)
 
     except UnsafeSQLError:
         logger.warning("Unsafe SQL generated for message: %s", message.text)
