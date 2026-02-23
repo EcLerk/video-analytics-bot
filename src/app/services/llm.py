@@ -6,7 +6,7 @@ from app.exceptions.exceptions import LLMError
 
 client = AsyncOpenAI(
     api_key=settings.openai_settings.api_key,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+    base_url="https://api.groq.com/openai/v1"
 )
 
 SYSTEM_PROMPT = """
@@ -42,6 +42,10 @@ SYSTEM_PROMPT = """
 - Всегда возвращай ТОЛЬКО один SQL-запрос без пояснений, без markdown, без ```sql
 - Запрос должен возвращать ровно одно число
 - Используй только SELECT, никаких INSERT/UPDATE/DELETE
+- Все временные условия указывай в UTC (+00), так как именно в этом timezone корректно работают сравнения
+- Пример: "с 10:00 до 15:00 28 ноября" →
+  created_at >= '2025-11-28 10:00:00+00' AND created_at <= '2025-11-28 15:00:00+00'
+- Убери правило про +03, всегда используй +00
 """
 
 
@@ -49,13 +53,14 @@ SYSTEM_PROMPT = """
 async def text_to_sql(user_message: str) -> str:
     try:
         response = await client.chat.completions.create(
-            model="gemini-2.5-flash",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_message},
             ],
             temperature=0,
         )
+
         return response.choices[0].message.content.strip()
     except Exception as e:
         raise LLMError("Failed to generate SQL") from e
