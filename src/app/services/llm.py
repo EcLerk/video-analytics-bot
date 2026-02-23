@@ -1,4 +1,6 @@
 from openai import AsyncOpenAI
+from tenacity import retry, stop_after_attempt, wait_exponential
+
 from app.config.settings import settings
 from app.exceptions.exceptions import LLMError
 
@@ -43,6 +45,7 @@ SYSTEM_PROMPT = """
 """
 
 
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
 async def text_to_sql(user_message: str) -> str:
     try:
         response = await client.chat.completions.create(
